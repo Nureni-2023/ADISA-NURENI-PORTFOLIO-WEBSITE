@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Nureni Portfolio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* Import Inter font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background-color: #f8fafc; /* Default light mode background */
+            transition: background-color 0.3s ease;
+        }
+        body.dark {
+            background-color: #0F172A; /* Default dark mode background */
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #64748b;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* General button styles for hover effects */
+        .btn-primary {
+            background-color: #4F46E5; /* Indigo-600 */
+            color: white;
+            padding: 0.75rem 2rem; /* py-3 px-8 */
+            border-radius: 9999px; /* rounded-full */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-lg */
+            transition: all 0.3s ease; /* transition-all duration-300 */
+            transform: scale(1); /* transform */
+        }
+        .btn-primary:hover {
+            background-color: #4338CA; /* Indigo-700 */
+            transform: scale(1.05); /* hover:scale-105 */
+        }
+        .btn-secondary {
+            background-color: transparent;
+            border: 2px solid #4F46E5; /* border-2 border-indigo-600 */
+            color: #4F46E5; /* text-indigo-600 */
+            padding: 0.75rem 2rem; /* py-3 px-8 */
+            border-radius: 9999px; /* rounded-full */
+            transition: all 0.3s ease; /* transition-all duration-300 */
+            transform: scale(1); /* transform */
+        }
+        .btn-secondary:hover {
+            background-color: #4F46E5; /* hover:bg-indigo-600 */
+            color: white; /* hover:text-white */
+            transform: scale(1.05); /* hover:scale-105 */
+        }
+        /* Dark mode specific button styles */
+        .dark .btn-secondary {
+            border-color: #818CF8; /* dark:border-indigo-400 */
+            color: #818CF8; /* dark:text-indigo-400 */
+        }
+        .dark .btn-secondary:hover {
+            background-color: #818CF8; /* dark:hover:bg-indigo-400 */
+            color: #1F2937; /* dark:hover:text-gray-900 */
+        }
+
+        /* Loading Spinner Styles */
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #4F46E5;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Initial animation styles for elements */
+        .animated-element {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .animated-element.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .animated-scale {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .animated-scale.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .animated-x-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+        .animated-x-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .animated-x-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+        .animated-x-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Project Card Hover Effect */
+        .project-card:hover .project-image {
+            transform: scale(1.1);
+        }
+
+        .project-card .project-overlay {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover .project-overlay {
+            opacity: 1;
+        }
+
+        /* Service Card Hover Effect */
+        .service-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .service-card .service-icon-wrapper {
+            transition: background-color 0.3s ease;
+        }
+        .service-card:hover .service-icon-wrapper {
+            background-color: #DBEAFE; /* Tailwind indigo-200 */
+        }
+        .dark .service-card:hover .service-icon-wrapper {
+            background-color: #312E81; /* Tailwind indigo-800 */
+        }
+        .service-card:hover .service-icon-wrapper svg {
+            transform: rotate(15deg);
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body class="font-inter antialiased">
+    <div id="loading-overlay" class="fixed inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-900 z-[9999]">
+        <div class="loading-spinner"></div>
+    </div>
+    <div id="portfolio-app" class="hidden text-gray-900 dark:text-gray-200">
+        <!-- Sticky Navbar -->
+        <nav id="navbar" class="fixed w-full z-50 transition-all duration-300">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="text-2xl font-bold text-gray-800 dark:text-white">
+                    <a href="#home" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Nureni</a>
+                </div>
+                <div class="hidden md:flex space-x-6 items-center" id="nav-links">
+                    <a href="#home" class="nav-link text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors relative group py-2 px-2 rounded-lg" data-section="home">Home<span class="underline-indicator absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 dark:bg-indigo-400 rounded-full hidden"></span></a>
+                    <a href="#about" class="nav-link text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors relative group py-2 px-2 rounded-lg" data-section="about">About<span class="underline-indicator absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 dark:bg-indigo-400 rounded-full hidden"></span></a>
+                    <a href="#projects" class="nav-link text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors relative group py-2 px-2 rounded-lg" data-section="projects">Projects<span class="underline-indicator absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 dark:bg-indigo-400 rounded-full hidden"></span></a>
+                    <a href="#services" class="nav-link text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors relative group py-2 px-2 rounded-lg" data-section="services">Services<span class="underline-indicator absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 dark:bg-indigo-400 rounded-full hidden"></span></a>
+                    <a href="#testimonials" class="nav-link text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors relative group py-2 px-2 rounded-lg" data-section="testimonials">Testimonials<span class="underline-indicator absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 dark:bg-indigo-400 rounded-full hidden"></span></a>
+                    <a href="#contact" class="nav-link text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors relative group py-2 px-2 rounded-lg" data-section="contact">Contact<span class="underline-indicator absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 dark:bg-indigo-400 rounded-full hidden"></span></a>
+                    <!-- Dark Mode Toggle -->
+                    <button id="darkModeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500" aria-label="Toggle dark mode">
+                        <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M3 12H2m15.325-4.275l-.707-.707M6.075 17.925l-.707.707M17.925 6.075l.707-.707M6.075 6.075l-.707-.707M12 18a6 6 0 100-12 6 6 0 000 12z" />
+                        </svg>
+                        <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+                </div>
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobileDarkModeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 mr-2" aria-label="Toggle dark mode">
+                        <svg id="mobile-sun-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M3 12H2m15.325-4.275l-.707-.707M6.075 17.925l-.707.707M17.925 6.075l.707-.707M6.075 6.075l-.707-.707M12 18a6 6 0 100-12 6 6 0 000 12z" />
+                        </svg>
+                        <svg id="mobile-moon-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+                    <button id="mobileMenuButton" class="text-gray-800 dark:text-white focus:outline-none" aria-label="Open menu">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <!-- Mobile Menu Overlay -->
+            <div id="mobileMenu" class="hidden md:hidden fixed inset-0 bg-black bg-opacity-50 z-40">
+                <div class="bg-white dark:bg-gray-900 w-3/4 h-full absolute right-0 top-0 shadow-lg p-6">
+                    <div class="flex justify-end mb-6">
+                        <button id="closeMobileMenuButton" class="text-gray-800 dark:text-white focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="flex flex-col space-y-4">
+                        <a href="#home" class="mobile-nav-link text-gray-800 dark:text-white text-lg font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" data-section="home">Home</a>
+                        <a href="#about" class="mobile-nav-link text-gray-800 dark:text-white text-lg font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" data-section="about">About</a>
+                        <a href="#projects" class="mobile-nav-link text-gray-800 dark:text-white text-lg font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" data-section="projects">Projects</a>
+                        <a href="#services" class="mobile-nav-link text-gray-800 dark:text-white text-lg font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" data-section="services">Services</a>
+                        <a href="#testimonials" class="mobile-nav-link text-gray-800 dark:text-white text-lg font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" data-section="testimonials">Testimonials</a>
+                        <a href="#contact" class="mobile-nav-link text-gray-800 dark:text-white text-lg font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" data-section="contact">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main>
+            <!-- Hero Section -->
+            <section id="home" class="relative min-h-screen flex items-center justify-center text-center bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 py-20 overflow-hidden">
+                <div class="absolute inset-0 z-0 opacity-10 dark:opacity-5" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%239CA3AF\' fill-opacity=\'0.4\' fill-rule=\'evenodd\'%3E%3Ccircle cx=\'30\' cy=\'30\' r=\'10\'/%3E%3C/g%3E%3C/svg%3E'); background-size: 20px 20px;"></div>
+                <div class="relative z-10 max-w-4xl mx-auto px-6">
+                    <img src="https://placehold.co/150x150/A3E635/1F2937?text=A.N" alt="Jane Doe" class="animated-scale w-32 h-32 md:w-40 md:h-40 rounded-full mx-auto mb-6 object-cover shadow-xl ring-4 ring-indigo-500 dark:ring-indigo-400">
+                    <h1 class="animated-element text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-4 leading-tight">
+                        Hi, I'm <span class="text-indigo-600 dark:text-indigo-400">Adisa Nureni Olaniyi</span>
+                    </h1>
+                    <p class="animated-element text-xl md:text-3xl text-gray-700 dark:text-gray-300 mb-8 font-medium">
+                        Full-Stack Web & App Developer
+                        <span class="block text-lg mt-2 text-gray-500 dark:text-gray-400">Based in Osun State, Nigeria</span>
+                    </p>
+                    <div class="animated-element flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="mailto:adisanureni2023@gmail.com" class="btn-primary">Hire Me</a>
+                        <a href="#projects" class="btn-secondary">View Projects</a>
+                        <a href="Resume.pdf" download class="btn-secondary">Download CV</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About Me Section -->
+            <section id="about" class="py-20 md:py-28 bg-white dark:bg-gray-800">
+                <div class="container mx-auto px-6 max-w-5xl">
+                    <h2 class="animated-element text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+                        About Me
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                        <div class="animated-x-left text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+                            <p class="mb-4">With over 3 years of experience, I specialize in crafting robust and scalable web and mobile applications. My expertise spans across modern frontend frameworks like React and Next.js, robust backend solutions with Node.js/Express, and cross-platform mobile development using Flutter and React Native. I'm passionate about building innovative solutions that solve real-world problems and enhance user experiences.</p>
+                            <p class="mb-2">
+                                <span class="font-semibold text-gray-900 dark:text-white">Education:</span> B.Sc. Computer Science, University of XYZ
+                            </p>
+                            <p class="mb-2">
+                                <span class="font-semibold text-gray-900 dark:text-white">Experience:</span> 3+ years developing and deploying high-performance applications.
+                            </p>
+                            <p class="mb-2">
+                                <span class="font-semibold text-gray-900 dark:text-white">Niche Focus:</span> High-performance SaaS applications, DeFi dApps, and intuitive mobile experiences.
+                            </p>
+                            <p>
+                                <span class="font-semibold text-gray-900 dark:text-white">Work Type:</span> Freelance & Agency Collaboration
+                            </p>
+                        </div>
+                        <div class="animated-x-right">
+                            <h3 class="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Technical Skills</h3>
+                            <div class="mb-6 last:mb-0">
+                                <h4 class="text-lg font-medium text-indigo-600 dark:text-indigo-400 mb-3 capitalize">Frontend</h4>
+                                <div class="flex flex-wrap gap-3">
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">HTML5</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">CSS3</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">JavaScript(ES6+)</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">Tailwind CSS</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">Boostrap</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">SCSS</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">React</span>
+                                </div>
+                            </div>
+                            <div class="mb-6 last:mb-0">
+                                <h4 class="text-lg font-medium text-indigo-600 dark:text-indigo-400 mb-3 capitalize">Backend</h4>
+                                <div class="flex flex-wrap gap-3">
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">Node.js</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">Express.js</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">PHP</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">C</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">C++</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">C#</span>
+                                </div>
+                            </div>
+                            <div class="mb-6 last:mb-0">
+                                <h4 class="text-lg font-medium text-indigo-600 dark:text-indigo-400 mb-3 capitalize">Mobile</h4>
+                                <div class="flex flex-wrap gap-3">
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">Flutter</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">React Native</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">Kotlin (Android)</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">Swift (iOS)</span>
+                                </div>
+                            </div>
+                            <div class="mb-6 last:mb-0">
+                                <h4 class="text-lg font-medium text-indigo-600 dark:text-indigo-400 mb-3 capitalize">Database</h4>
+                                <div class="flex flex-wrap gap-3">
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">MongoDB</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">PostgreSQL</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">Firebase (Firestore)</span>
+                                </div>
+                            </div>
+                            <div class="mb-6 last:mb-0">
+                                <h4 class="text-lg font-medium text-indigo-600 dark:text-indigo-400 mb-3 capitalize">DevOps</h4>
+                                <div class="flex flex-wrap gap-3">
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">Docker</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">AWS (EC2, S3)</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">Vercel</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">Netlify</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">CI/CD (GitHub Actions)</span>
+                                </div>
+                            </div>
+                            <div class="mb-6 last:mb-0">
+                                <h4 class="text-lg font-medium text-indigo-600 dark:text-indigo-400 mb-3 capitalize">APIs</h4>
+                                <div class="flex flex-wrap gap-3">
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">Stripe API</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">Google Cloud APIs</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">OpenAI API</span>
+                                    <span class="animated-element px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium shadow-md">Twilio API</span>
+                                </div>
+                            </div>
+
+                            <h3 class="text-2xl font-semibold text-gray-900 dark:text-white mt-10 mb-6">Certifications & Achievements</h3>
+                            <div class="space-y-4">
+                                <div class="animated-element flex items-center bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500 dark:text-green-400 mr-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.001 12.001 0 002.92 12c0 2.872 1.125 5.501 3.076 7.426L12 21.025l6.004-3.599c1.951-1.925 3.076-4.554 3.076-7.426a12.001 12.001 0 00-3.382-8.016z" />
+                                    </svg>
+                                    <div>
+                                        <h5 class="font-semibold text-gray-900 dark:text-white">Google Certified Professional Cloud Developer</h5>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">Google</p>
+                                    </div>
+                                </div>
+                                <div class="animated-element flex items-center bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500 dark:text-green-400 mr-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.001 12.001 0 002.92 12c0 2.872 1.125 5.501 3.076 7.426L12 21.025l6.004-3.599c1.951-1.925 3.076-4.554 3.076-7.426a12.001 12.001 0 00-3.382-8.016z" />
+                                    </svg>
+                                    <div>
+                                        <h5 class="font-semibold text-gray-900 dark:text-white">Sololearn Developer Professional Certificate</h5>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">Sololearn</p>
+                                    </div>
+                                </div>
+                                <div class="animated-element flex items-center bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500 dark:text-green-400 mr-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.001 12.001 0 002.92 12c0 2.872 1.125 5.501 3.076 7.426L12 21.025l6.004-3.599c1.951-1.925 3.076-4.554 3.076-7.426a12.001 12.001 0 00-3.382-8.016z" />
+                                    </svg>
+                                    <div>
+                                        <h5 class="font-semibold text-gray-900 dark:text-white">FreeCodeCamp Certified Developer – Associate</h5>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">FFC</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects Section -->
+            <section id="projects" class="py-20 md:py-28 bg-gray-50 dark:bg-gray-900">
+                <div class="container mx-auto px-6 max-w-6xl">
+                    <h2 class="animated-element text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+                        My Projects
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" id="projects-grid">
+                        <!-- Project cards will be dynamically inserted here by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section id="services" class="py-20 md:py-28 bg-white dark:bg-gray-800">
+                <div class="container mx-auto px-6 max-w-6xl">
+                    <h2 class="animated-element text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+                        My Services
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="animated-element service-card bg-gray-50 dark:bg-gray-700 p-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform">
+                            <div class="mb-4 flex justify-center text-center">
+                                <div class="service-icon-wrapper p-4 rounded-full bg-indigo-100 dark:bg-indigo-900 transition-colors duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3 text-center">Web App Development</h3>
+                            <p class="text-gray-700 dark:text-gray-300 text-center">Building scalable and interactive web applications using modern frameworks.</p>
+                        </div>
+                        <div class="animated-element service-card bg-gray-50 dark:bg-gray-700 p-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform">
+                            <div class="mb-4 flex justify-center text-center">
+                                <div class="service-icon-wrapper p-4 rounded-full bg-indigo-100 dark:bg-indigo-900 transition-colors duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3 text-center">Mobile App Development</h3>
+                            <p class="text-gray-700 dark:text-gray-300 text-center">Crafting native-like iOS & Android experiences with cross-platform tools.</p>
+                        </div>
+                        <div class="animated-element service-card bg-gray-50 dark:bg-gray-700 p-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform">
+                            <div class="mb-4 flex justify-center text-center">
+                                <div class="service-icon-wrapper p-4 rounded-full bg-indigo-100 dark:bg-indigo-900 transition-colors duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-600 dark:text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3 text-center">API Integration</h3>
+                            <p class="text-gray-700 dark:text-gray-300 text-center">Seamlessly connecting various services and building robust API backends.</p>
+                        </div>
+                        <div class="animated-element service-card bg-gray-50 dark:bg-gray-700 p-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform">
+                            <div class="mb-4 flex justify-center text-center">
+                                <div class="service-icon-wrapper p-4 rounded-full bg-indigo-100 dark:bg-indigo-900 transition-colors duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h4l2-2m-6-1V4h2m6 10V4h2m6 10l2-2m-2 2l-2 2m2-2h-2M4 14v-2M20 14v-2M10 20h4l1-1v-4m-6-10H4l1-1V3m6 0v4m-6 0h-4l-1 1V6m6-10H4l1-1V3m-2-2l2 2m-2-2l-2 2M10 20v4m-6-4h-4l-1-1V6m6-10H4l1-1V3m2 2h-4l-1 1V6m6 0h-4l-1 1V6m6-10H4l1-1V3m2 2h-4l-1 1V6" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3 text-center">UI/UX Design</h3>
+                            <p class="text-gray-700 dark:text-gray-300 text-center">Designing intuitive and engaging user interfaces for optimal experiences.</p>
+                        </div>
+                        <div class="animated-element service-card bg-gray-50 dark:bg-gray-700 p-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform">
+                            <div class="mb-4 flex justify-center text-center">
+                                <div class="service-icon-wrapper p-4 rounded-full bg-indigo-100 dark:bg-indigo-900 transition-colors duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v-1a2 2 0 012-2h12a2 2 0 012 2v1m-6 4H8m6 0l3-3m-3 3l-3-3m-6-4V4a2 2 0 012-2h4l2 5V2m-2 5h1a2 2 0 002-2V4a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h4" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3 text-center">Cloud Deployment</h3>
+                            <p class="text-gray-700 dark:text-gray-300 text-center">Deploying applications to cloud platforms ensuring scalability and reliability.</p>
+                        </div>
+                        <div class="animated-element service-card bg-gray-50 dark:bg-gray-700 p-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform">
+                            <div class="mb-4 flex justify-center text-center">
+                                <div class="service-icon-wrapper p-4 rounded-full bg-indigo-100 dark:bg-indigo-900 transition-colors duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3 text-center">CI/CD Pipelines</h3>
+                            <p class="text-gray-700 dark:text-gray-300 text-center">Automating software delivery with robust Continuous Integration/Deployment.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials Section -->
+            <section id="testimonials" class="py-20 md:py-28 bg-gray-50 dark:bg-gray-900">
+                <div class="container mx-auto px-6 max-w-4xl">
+                    <h2 class="animated-element text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+                        Client Testimonials
+                    </h2>
+                    <div class="animated-element relative w-full overflow-hidden rounded-lg shadow-lg bg-white dark:bg-gray-800 p-8">
+                        <div id="testimonial-carousel-content" class="flex flex-col items-center text-center">
+                            <!-- Testimonial content will be inserted here by JavaScript -->
+                        </div>
+                        <button id="prevTestimonial" class="absolute left-0 top-1/2 -translate-y-1/2 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500" aria-label="Previous testimonial">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <button id="nextTestimonial" class="absolute right-0 top-1/2 -translate-y-1/2 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500" aria-label="Next testimonial">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tech Stack Showcase -->
+            <section id="tech-stack" class="py-20 md:py-28 bg-white dark:bg-gray-800">
+                <div class="container mx-auto px-6 max-w-6xl">
+                    <h2 class="animated-element text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+                        My Tech Stack
+                    </h2>
+                    <div class="flex flex-wrap justify-center gap-8">
+                        <div class="animated-element flex flex-col items-center p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md transition-transform duration-300 hover:scale-110">
+                            <img src="https://placehold.co/80x80/22D3EE/0F172A?text=React" alt="React" class="w-16 h-16 object-contain mb-2">
+                            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">React</p>
+                        </div>
+                        <div class="animated-element flex flex-col items-center p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md transition-transform duration-300 hover:scale-110">
+                            <img src="https://placehold.co/80x80/38BDF8/0F172A?text=Tailwind" alt="Tailwind CSS" class="w-16 h-16 object-contain mb-2">
+                            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">Tailwind CSS</p>
+                        </div>
+                        <div class="animated-element flex flex-col items-center p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md transition-transform duration-300 hover:scale-110">
+                            <img src="https://placehold.co/80x80/9F7AEA/0F172A?text=Framer" alt="Framer Motion" class="w-16 h-16 object-contain mb-2">
+                            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">Framer Motion</p>
+                        </div>
+                        <div class="animated-element flex flex-col items-center p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md transition-transform duration-300 hover:scale-110">
+                            <img src="https://placehold.co/80x80/000000/FFFFFF?text=Next.js" alt="Next.js" class="w-16 h-16 object-contain mb-2">
+                            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">Next.js</p>
+                        </div>
+                        <div class="animated-element flex flex-col items-center p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md transition-transform duration-300 hover:scale-110">
+                            <img src="https://placehold.co/80x80/6EE7B7/0F172A?text=Node.js" alt="Node.js" class="w-16 h-16 object-contain mb-2">
+                            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">Node.js</p>
+                        </div>
+                        <div class="animated-element flex flex-col items-center p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md transition-transform duration-300 hover:scale-110">
+                            <img src="https://placehold.co/80x80/06B6D4/0F172A?text=Flutter" alt="Flutter" class="w-16 h-16 object-contain mb-2">
+                            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">Flutter</p>
+                        </div>
+                        <div class="animated-element flex flex-col items-center p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md transition-transform duration-300 hover:scale-110">
+                            <img src="https://placehold.co/80x80/4ADE80/0F172A?text=MongoDB" alt="MongoDB" class="w-16 h-16 object-contain mb-2">
+                            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">MongoDB</p>
+                        </div>
+                        <div class="animated-element flex flex-col items-center p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md transition-transform duration-300 hover:scale-110">
+                            <img src="https://placehold.co/80x80/3B82F6/0F172A?text=PostgreSQL" alt="PostgreSQL" class="w-16 h-16 object-contain mb-2">
+                            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">PostgreSQL</p>
+                        </div>
+                        <div class="animated-element flex flex-col items-center p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md transition-transform duration-300 hover:scale-110">
+                            <img src="https://placehold.co/80x80/2563EB/FFFFFF?text=Docker" alt="Docker" class="w-16 h-16 object-contain mb-2">
+                            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">Docker</p>
+                        </div>
+                        <div class="animated-element flex flex-col items-center p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md transition-transform duration-300 hover:scale-110">
+                            <img src="https://placehold.co/80x80/FBBF24/0F172A?text=AWS" alt="AWS" class="w-16 h-16 object-contain mb-2">
+                            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">AWS</p>
+                        </div>
+                        <div class="animated-element flex flex-col items-center p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md transition-transform duration-300 hover:scale-110">
+                            <img src="https://placehold.co/80x80/3178C6/FFFFFF?text=TS" alt="TypeScript" class="w-16 h-16 object-contain mb-2">
+                            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">TypeScript</p>
+                        </div>
+                        <div class="animated-element flex flex-col items-center p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md transition-transform duration-300 hover:scale-110">
+                            <img src="https://placehold.co/80x80/4F46E5/FFFFFF?text=Express" alt="Express.js" class="w-16 h-16 object-contain mb-2">
+                            <p class="text-sm font-medium text-gray-800 dark:text-gray-200">Express.js</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="py-20 md:py-28 bg-gray-50 dark:bg-gray-900">
+                <div class="container mx-auto px-6 max-w-4xl">
+                    <h2 class="animated-element text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+                        Get in Touch
+                    </h2>
+                    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div class="animated-x-left md:border-r md:border-gray-200 md:pr-10 dark:md:border-gray-700">
+                            <h3 class="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Contact Details</h3>
+                            <div class="space-y-4 text-gray-700 dark:text-gray-300">
+                                <p class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                    <span>adisanureni2023@gmail.com</span>
+                                </p>
+                                <p class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    <span>Osun State, Nigeria</span>
+                                </p>
+                                <p class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h.01M7 12h.01M5 16h.01M17 16h.01M13 16h.01M17 21H7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2z" />
+                                    </svg>
+                                    <span>Available for new projects!</span>
+                                </p>
+                            </div>
+
+                            <h3 class="text-2xl font-semibold text-gray-900 dark:text-white mt-8 mb-6">Connect with Me</h3>
+                            <div class="flex space-x-6">
+                                <a href="https://github.com/Nureni-2023/" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                                    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 fill-current"><title>LinkedIn</title><path d="M20.447 20.452h-3.51V14.61a2.88 2.88 0 01-2.584-1.282c-.895-1.282-1.077-3.08-.435-4.832.643-1.752 2.302-2.923 4.14-2.923C20.5 5.572 22 7.072 22 9.072v11.38zM7.29 8.016a2.025 2.025 0 01-2.02-2.02c0-1.12.9-2.02 2.02-2.02s2.02.9 2.02 2.02-.9 2.02-2.02 2.02zM3.784 20.452h7.026v-12.8h-7.026v12.8z"/></svg>
+                                </a>
+                                <a href="https://github.com/Nureni-2023/" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                                    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 fill-current"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.28-.01-1.017-.015-2.004-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.334-1.756-1.334-1.756-1.09-.744.08-.73.08-.73 1.205.086 1.838 1.238 1.838 1.238 1.07 1.835 2.809 1.305 3.49.998.108-.775.418-1.305.762-1.605-2.665-.3-5.464-1.332-5.464-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.13-3.18 0 0 1-.322 3.3.122.96-.265 1.98-.397 3-.397 1.02 0 2.04.132 3 .397 2.3-1.442 3.3-1.22 3.3-1.22.67 1.657.26 2.877.13 3.18.77.84 1.235 1.91 1.235 3.22 0 4.61-2.8 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.895-.015 3.28 0 .32.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                                </a>
+                                <a href="https://github.com/Nureni-2023/" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                                    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 fill-current"><title>Twitter</title><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.185a4.916 4.916 0 00-8.384 4.482c-4.09-.21-7.73-2.17-10.193-5.172.424.646.66 1.398.66 2.222 0 1.59-.805 2.99-2.035 3.791a4.916 4.916 0 01-2.228-.616v.061c0 2.272 1.62 4.16 3.774 4.59.395.08.805.122 1.227.122.301 0 .59-.028.872-.084.59.186 1.15.347 1.7.347 1.414 0 2.607-.638 3.51-1.63a4.935 4.935 0 001.378-2.608A9.957 9.957 0 0024 4.597z"/></svg>
+                                </a>
+                                <a href="https://github.com/Nureni-2023/" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                                    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 fill-current"><title>DEV Community</title><path d="M12.041 23.018c-.378-.005-.75-.027-1.113-.066-.363-.039-.718-.088-1.066-.148-1.745-.296-3.232-.888-4.46-1.776C3.992 20.088 3.125 18.736 2.458 17.07c-.667-1.666-1-3.666-1-6.002 0-3.385.945-6.09 2.836-8.118C6.182 1.043 8.804 0 12.041 0c3.232 0 5.845 1.042 7.842 3.123 1.996 2.081 2.994 4.77 2.994 8.068 0 3.328-1.127 6.035-3.382 8.12-2.255 2.084-5.275 3.126-9.034 3.126Zm.006-2.66c3.197 0 5.67-.98 7.42-2.94a7.994 7.994 0 002.555-5.748c0-2.316-.763-4.225-2.29-5.727-1.527-1.503-3.668-2.254-6.425-2.254-2.763 0-4.908.75-6.435 2.254-1.527 1.502-2.29 3.411-2.29 5.727 0 2.332.76 4.257 2.28 5.776 1.52 1.518 3.655 2.278 6.405 2.278Zm0-3.328c-1.305 0-2.348-.36-3.13-.108-.782.252-1.378.784-1.787 1.597-.41.813-.615 1.764-.615 2.853 0 .822.257 1.485.772 1.988.514.503 1.258.756 2.23.756.883 0 1.636-.263 2.262-.787.626-.525.94-1.196.94-2.012 0-1.07-.282-1.956-.846-2.656-.563-.7-.954-1.048-1.17-.98-.215.068-.323.364-.323.888Zm-.005-2.02c-1.284 0-2.304-.32-3.06-1.17-.754-.852-1.132-1.93-1.132-3.235 0-1.285.38-2.35 1.14-3.194.76-.845 1.782-1.267 3.066-1.267 1.288 0 2.308.423 3.06 1.27.75.848 1.127 1.91 1.127 3.187 0 1.305-.375 2.385-1.125 3.245-.75.86-1.77 1.29-3.055 1.29ZM12.046 5.86c-.848 0-1.527-.272-2.036-.816-.51-.544-.764-1.234-.764-2.07 0-.81.254-1.47.764-1.98.51-.51 1.19-.764 2.036-.764.846 0 1.524.254 2.03.764.507.51.76.1.76 1.98 0 .836-.253 1.526-.764 2.07-.507.544-1.185.816-2.03.816Z"/></svg>
+                                </a>
+                            </div>
+                            <a href="Resume.pdf" download class="btn-primary w-full mt-8" style="margin-top: 10rem;">Download CV</a>
+                        </div>
+
+                        <div class="animated-x-right">
+                            <h3 class="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Send Me a Message</h3>
+                            <!-- Replace with your Formspree/EmailJS or custom backend endpoint -->
+                            <form action="https://formspree.io/f/manjbplo" method="POST" class="space-y-6">
+                                <div>
+                                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
+                                    <input type="text" id="name" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                                    <input type="email" id="email" name="_replyto" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                                </div>
+                                <div>
+                                    <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Message</label>
+                                    <textarea id="message" name="message" rows="5" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"></textarea>
+                                </div>
+                                <button type="submit" class="btn-primary w-full">Send Message</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="bg-gray-900 dark:bg-gray-950 py-10 text-center text-gray-400">
+                <div class="container mx-auto px-6">
+                    <p>&copy; <span id="currentYear"></span> Adisa Nureni Olaniyi. All rights reserved.</p>
+                    <p class="mt-2 text-sm">Built with HTML, CSS, and JavaScript</p>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Data (moved from React component) ---
+            const developerData = {
+              name: "Adisa Nureni Olaniyi",
+              title: "Full-Stack Web & App Developer",
+              location: "Osun State, Nigeria",
+              avatar: "https://placehold.co/150x150/A3E635/1F2937?text=A-N", // Placeholder
+              bio: "With over 5 years of experience, I specialize in crafting robust and scalable web and mobile applications. My expertise spans across modern frontend frameworks like React and Next.js, robust backend solutions with Node.js/Express, and cross-platform mobile development using Flutter and React Native. I'm passionate about building innovative solutions that solve real-world problems and enhance user experiences.",
+              education: "B.Sc. Computer Science, University of XYZ",
+              experienceSummary: "5+ years developing and deploying high-performance applications.",
+              nicheFocus: "High-performance SaaS applications, DeFi dApps, and intuitive mobile experiences.",
+              workType: "Freelance & Agency Collaboration",
+              skills: {
+                frontend: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "Redux", "GraphQL (Apollo)"],
+                backend: ["Node.js", "Express.js", "Fastify", "RESTful APIs", "Socket.IO", "WebSockets"],
+                mobile: ["Flutter", "React Native", "Kotlin (Android)", "Swift (iOS)"],
+                database: ["MongoDB", "PostgreSQL", "Firebase (Firestore)"],
+                devops: ["Docker", "AWS (EC2, S3)", "Vercel", "Netlify", "CI/CD (GitHub Actions)"],
+                apis: ["Stripe API", "Google Cloud APIs", "OpenAI API", "Twilio API"],
+              },
+              certifications: [
+                { name: "Google Certified Professional Cloud Developer", issuer: "Google" },
+                { name: "Meta Frontend Developer Professional Certificate", issuer: "Meta" },
+                { name: "AWS Certified Developer – Associate", issuer: "AWS" },
+              ],
+              projects: [
+                {
+                  id: "project-1",
+                  title: "Decentralized Finance (DeFi) Platform",
+                  image: "https://placehold.co/600x400/99F6E4/0F172A?text=DeFi+Platform",
+                  stack: ["Next.js", "Tailwind CSS", "Solidity", "Hardhat", "Ethers.js"],
+                  role: "Lead Frontend Developer",
+                  keyFeatures: ["Real-time price feeds", "Wallet integration (MetaMask)", "Smart contract interaction"],
+                  github: "https://github.com/Nureni-2023/",
+                  live: "https://nureni-2023.github.io/Restaurant-Website/",
+                },
+                {
+                  id: "project-2",
+                  title: "AI-Powered Content Generator SaaS",
+                  image: "https://placehold.co/600x400/FBCFE8/0F172A?text=AI+SaaS",
+                  stack: ["React", "Node.js", "Express.js", "MongoDB", "OpenAI API"],
+                  role: "Full-Stack Developer",
+                  keyFeatures: ["Generative text & image creation", "User authentication", "Subscription management"],
+                  github: "https://github.com/Nureni-2023/",
+                  live: "https://nureni-2023.github.io/Best-Quran-App/",
+                },
+                {
+                  id: "project-3",
+                  title: "Cross-Platform E-commerce Mobile App",
+                  image: "https://placehold.co/600x400/BFDBFE/0F172A?text=Mobile+E-commerce",
+                  stack: ["Flutter", "Firebase (Firestore, Auth)", "Stripe"],
+                  role: "Mobile App Developer",
+                  keyFeatures: ["Product catalog", "Shopping cart", "Secure checkout", "Push notifications"],
+                  github: "https://github.com/Nureni-2023/",
+                  live: "https://nureni-2023.github.io/Phone-Selling-Website-/",
+                },
+                {
+                  id: "project-4",
+                  title: "Progressive Web App (PWA) Task Manager",
+                  image: "https://placehold.co/600x400/A78BFA/0F172A?text=PWA+Task+Manager",
+                  stack: ["React", "Service Workers", "IndexedDB", "Node.js (API)"],
+                  role: "Frontend & PWA Specialist",
+                  keyFeatures: ["Offline support", "Add to homescreen", "Real-time sync", "Notifications"],
+                  github: "https://github.com/Nureni-2023/",
+                  live: "https://nureni-2023.github.io/E-Commerce-main/",
+                },
+                {
+                  id: "project-5",
+                  title: "GraphQL API for Social Network",
+                  image: "https://placehold.co/600x400/FECACA/0F172A?text=GraphQL+API",
+                  stack: ["Node.js", "Apollo Server", "PostgreSQL", "TypeORM"],
+                  role: "Backend & API Developer",
+                  keyFeatures: ["Complex data relationships", "Authentication & Authorization", "Real-time subscriptions"],
+                  github: "https://github.com/Nureni-2023/",
+                  live: "https://nureni-2023.github.io/Picture-Website-/",
+                },
+                {
+                  id: "project-6",
+                  title: "Custom CRM Dashboard",
+                  image: "https://placehold.co/600x400/D1FAE5/0F172A?text=CRM+Dashboard",
+                  stack: ["Next.js", "TypeScript", "Tailwind CSS", "MongoDB", "Express.js"],
+                  role: "Full-Stack Developer",
+                  keyFeatures: ["User management", "Data visualization", "Reporting features", "Admin panel"],
+                  github: "https://github.com/Nureni-2023/",
+                  live: "https://nureni-2023.github.io/ADITECH-DATA-HOME-PAGE/",
+                },
+                {
+                  id: "project-7",
+                  title: "NFT Marketplace (Mobile)",
+                  image: "https://placehold.co/600x400/DBEAFE/0F172A?text=NFT+Marketplace",
+                  stack: ["React Native", "Solana Web3.js", "IPFS"],
+                  role: "Mobile Blockchain Developer",
+                  keyFeatures: ["NFT minting", "Marketplace listings", "Wallet connect", "Auction system"],
+                  github: "https://github.com/Nureni-2023/",
+                  live: "https://nureni-2023.github.io/Watch-Clock-Website/",
+                },
+                {
+                  id: "project-8",
+                  title: "Real-time Chat Application",
+                  image: "https://placehold.co/600x400/EDE9FE/0F172A?text=Chat+App",
+                  stack: ["React", "Socket.IO", "Node.js", "Express.js", "Redis"],
+                  role: "Backend & Real-time Specialist",
+                  keyFeatures: ["Instant messaging", "User presence", "Typing indicators", "Group chats"],
+                  github: "https://github.com/Nureni-2023/",
+                  live: "https://nureni-2023.github.io/FOOD-WEBSITE/",
+                },
+              ],
+              services: [
+                { icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>`, title: "Web App Development", description: "Building scalable and interactive web applications using modern frameworks." },
+                { icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>`, title: "Mobile App Development", description: "Crafting native-like iOS & Android experiences with cross-platform tools." },
+                { icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-600 dark:text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>`, title: "API Integration", description: "Seamlessly connecting various services and building robust API backends." },
+                { icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h4l2-2m-6-1V4h2m6 10V4h2m6 10l2-2m-2 2l-2 2m2-2h-2M4 14v-2M20 14v-2M10 20h4l1-1v-4m-6-10H4l1-1V3m6 0v4m-6 0h-4l-1 1V6m6-10H4l1-1V3m-2-2l2 2m-2-2l-2 2M10 20v4m-6-4h-4l-1-1V6m6-10H4l1-1V3m2 2h-4l-1 1V6m6 0h-4l-1 1V6m6-10H4l1-1V3m2 2h-4l-1 1V6" /></svg>`, title: "UI/UX Design", description: "Designing intuitive and engaging user interfaces for optimal experiences." },
+                { icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v-1a2 2 0 012-2h12a2 2 0 012 2v1m-6 4H8m6 0l3-3m-3 3l-3-3m-6-4V4a2 2 0 012-2h4l2 5V2m-2 5h1a2 2 0 002-2V4a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h4" /></svg>`, title: "Cloud Deployment", description: "Deploying applications to cloud platforms ensuring scalability and reliability." },
+                { icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>`, title: "CI/CD Pipelines", description: "Automating software delivery with robust Continuous Integration/Deployment." },
+              ],
+              testimonials: [
+                {
+                  id: 1,
+                  name: "Alice Johnson",
+                  image: "https://placehold.co/80x80/6EE7B7/0F172A?text=AJ",
+                  role: "CTO, Tech Solutions Inc.",
+                  review: "Jane delivered an exceptional web application that exceeded our expectations. Her attention to detail and problem-solving skills are outstanding. Highly recommend!",
+                },
+                {
+                  id: 2,
+                  name: "Bob Williams",
+                  image: "https://placehold.co/80x80/93C5FD/0F172A?text=BW",
+                  role: "CEO, Innovate Mobile",
+                  review: "Working with Jane on our mobile app was a fantastic experience. She brought our vision to life with a user-friendly and highly performant product. A true professional!",
+                },
+                {
+                  id: 3,
+                  name: "Carol Davis",
+                  image: "https://placehold.co/80x80/FDBA74/0F172A?text=CD",
+                  role: "Product Manager, Data Insights LLC",
+                  review: "Jane's expertise in backend development and API integration was crucial for our project's success. She built a robust and scalable solution.",
+                },
+                {
+                    id: 4,
+                    name: "David Smith",
+                    image: "https://placehold.co/80x80/C4B5FD/0F172A?text=DS",
+                    role: "Startup Founder, NextGen Apps",
+                    review: "Jane transformed our complex ideas into a sleek, functional product. Her technical acumen and communication were top-notch. Will definitely collaborate again!",
+                },
+                {
+                    id: 5,
+                    name: "Emily White",
+                    image: "https://placehold.co/80x80/FFEDD5/0F172A?text=EW",
+                    role: "Lead Engineer, Global Solutions",
+                    review: "Her proficiency with modern tech stacks, especially React and Node.js, made our integration project seamless. An invaluable asset to any team.",
+                },
+              ],
+              techStackLogos: [
+                { name: "React", logo: "https://placehold.co/80x80/22D3EE/0F172A?text=React" },
+                { name: "Tailwind CSS", logo: "https://placehold.co/80x80/38BDF8/0F172A?text=Tailwind" },
+                { name: "Framer Motion", logo: "https://placehold.co/80x80/9F7AEA/0F172A?text=Framer" },
+                { name: "Next.js", logo: "https://placehold.co/80x80/000000/FFFFFF?text=Next.js" },
+                { name: "Node.js", logo: "https://placehold.co/80x80/6EE7B7/0F172A?text=Node.js" },
+                { name: "Flutter", logo: "https://placehold.co/80x80/06B6D4/0F172A?text=Flutter" },
+                { name: "MongoDB", logo: "https://placehold.co/80x80/4ADE80/0F172A?text=MongoDB" },
+                { name: "PostgreSQL", logo: "https://placehold.co/80x80/3B82F6/0F172A?text=PostgreSQL" },
+                { name: "Docker", logo: "https://placehold.co/80x80/2563EB/FFFFFF?text=Docker" },
+                { name: "AWS", logo: "https://placehold.co/80x80/FBBF24/0F172A?text=AWS" },
+                { name: "TypeScript", logo: "https://placehold.co/80x80/3178C6/FFFFFF?text=TS" },
+                { name: "Express.js", logo: "https://placehold.co/80x80/4F46E5/FFFFFF?text=Express" },
+              ],
+              socialLinks: {
+                linkedin: "https://www.linkedin.com/in/adisa-nureni-olaniyi-557684290?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app", // Replace with actual links
+                github: "https://github.com/Nureni-2023/",
+                twitter: "https://x.com/Nureni01?t=ExdflC6cUIkCId4fbaoEgg&s=09",
+                devto: "https://www.instagram.com/olaniyi.adisa.589?igsh=YzljYTk1ODg3Zg==",
+              },
+              email: "adisanuren2023@gmail.com",
+              cvLink: "Resume.pdf", // Placeholder for CV download
+            };
+
+            // --- Global State Variables ---
+            let darkMode = localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            let activeSection = 'home';
+            let currentTestimonialIndex = 0;
+            let testimonialInterval;
+
+            // --- DOM Elements ---
+            const htmlElement = document.documentElement;
+            const bodyElement = document.body;
+            const navbar = document.getElementById('navbar');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const closeMobileMenuButton = document.getElementById('closeMobileMenuButton');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const mobileDarkModeToggle = document.getElementById('mobileDarkModeToggle');
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+            const mobileSunIcon = document.getElementById('mobile-sun-icon');
+            const mobileMoonIcon = document.getElementById('mobile-moon-icon');
+            const projectsGrid = document.getElementById('projects-grid');
+            const testimonialCarouselContent = document.getElementById('testimonial-carousel-content');
+            const prevTestimonialButton = document.getElementById('prevTestimonial');
+            const nextTestimonialButton = document.getElementById('nextTestimonial');
+            const loadingOverlay = document.getElementById('loading-overlay');
+            const portfolioApp = document.getElementById('portfolio-app');
+            const sections = document.querySelectorAll('section');
+            const currentYearSpan = document.getElementById('currentYear');
+
+            // --- Initialization ---
+
+            // Set initial dark mode
+            if (darkMode) {
+                htmlElement.classList.add('dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+                mobileSunIcon.classList.remove('hidden');
+                mobileMoonIcon.classList.add('hidden');
+            } else {
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+                mobileMoonIcon.classList.remove('hidden');
+                mobileSunIcon.classList.add('hidden');
+            }
+
+            // Set current year in footer
+            currentYearSpan.textContent = new Date().getFullYear();
+
+            // Simulate loading and show content
+            setTimeout(() => {
+                loadingOverlay.classList.add('hidden');
+                portfolioApp.classList.remove('hidden');
+                animateOnScroll(); // Trigger initial animations
+            }, 1500); // Simulate 1.5 seconds loading time
+
+
+            // --- Functions ---
+
+            function toggleDarkMode() {
+                darkMode = !darkMode;
+                if (darkMode) {
+                    htmlElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                    sunIcon.classList.remove('hidden');
+                    moonIcon.classList.add('hidden');
+                    mobileSunIcon.classList.remove('hidden');
+                    mobileMoonIcon.classList.add('hidden');
+                } else {
+                    htmlElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                    moonIcon.classList.remove('hidden');
+                    sunIcon.classList.add('hidden');
+                    mobileMoonIcon.classList.remove('hidden');
+                    mobileSunIcon.classList.add('hidden');
+                }
+            }
+
+            function smoothScrollTo(id) {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                    // Close mobile menu after clicking a link
+                    if (mobileMenu.classList.contains('translate-x-0')) {
+                        mobileMenu.classList.remove('translate-x-0');
+                        mobileMenu.classList.add('translate-x-full');
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            }
+
+            function updateNavbarOnScroll() {
+                if (window.pageYOffset > 50) {
+                    navbar.classList.add('bg-white/90', 'shadow-lg', 'backdrop-blur-md');
+                    navbar.classList.remove('bg-transparent');
+                    navbar.classList.add('dark:bg-gray-900/90');
+                } else {
+                    navbar.classList.remove('bg-white/90', 'shadow-lg', 'backdrop-blur-md');
+                    navbar.classList.add('bg-transparent');
+                    navbar.classList.remove('dark:bg-gray-900/90');
+                }
+            }
+
+            function renderProjects() {
+                projectsGrid.innerHTML = ''; // Clear existing content
+                developerData.projects.forEach((project, index) => {
+                    const projectCard = document.createElement('div');
+                    projectCard.className = `animated-element project-card bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden group hover:shadow-2xl transition-all duration-300`;
+                    projectCard.innerHTML = `
+                        <div class="relative overflow-hidden">
+                            <img src="${project.image}" alt="${project.title}" class="project-image w-full h-56 object-cover transition-transform duration-500">
+                            <div class="project-overlay absolute inset-0 bg-gradient-to-t from-gray-900/70 to-transparent flex items-end p-4">
+                                <h3 class="text-xl font-semibold text-white">${project.title}</h3>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">${project.role}</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                ${project.stack.map(tech => `<span class="px-3 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-xs font-medium">${tech}</span>`).join('')}
+                            </div>
+                            <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 text-sm mb-4">
+                                ${project.keyFeatures.map(feature => `<li>${feature}</li>`).join('')}
+                            </ul>
+                            <div class="flex justify-between items-center mt-auto pt-4 border-t border-gray-100 dark:border-gray-700">
+                                <a href="${project.github}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors flex items-center text-sm font-medium">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6m3 0V7a2 2 0 012-2h4a2 2 0 012 2v12m-6 0h6" />
+                                    </svg>
+                                    GitHub
+                                </a>
+                                <a href="${project.live}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors flex items-center text-sm font-medium">
+                                    Live Demo
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0l-7 7m7-7v6" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    projectsGrid.appendChild(projectCard);
+                });
+            }
+
+            function renderTestimonial() {
+                const testimonial = developerData.testimonials[currentTestimonialIndex];
+                testimonialCarouselContent.innerHTML = `
+                    <img
+                        src="${testimonial.image}"
+                        alt="${testimonial.name}"
+                        class="w-20 h-20 rounded-full object-cover mb-4 ring-2 ring-indigo-500 dark:ring-indigo-400"
+                    />
+                    <p class="text-lg italic text-gray-700 dark:text-gray-300 mb-4">
+                        "${testimonial.review}"
+                    </p>
+                    <p class="font-semibold text-gray-900 dark:text-white">
+                        ${testimonial.name}
+                    </p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        ${testimonial.role}
+                    </p>
+                `;
+            }
+
+            function startTestimonialCarousel() {
+                if (testimonialInterval) clearInterval(testimonialInterval);
+                testimonialInterval = setInterval(() => {
+                    currentTestimonialIndex = (currentTestimonialIndex + 1) % developerData.testimonials.length;
+                    renderTestimonial();
+                }, 5000);
+            }
+
+            function animateOnScroll() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target); // Stop observing once visible
+                        }
+                    });
+                }, {
+                    root: null,
+                    rootMargin: '0px',
+                    threshold: 0.1 // Trigger when 10% of element is visible
+                });
+
+                document.querySelectorAll('.animated-element, .animated-scale, .animated-x-left, .animated-x-right').forEach(element => {
+                    observer.observe(element);
+                });
+            }
+
+            function updateActiveNavLink() {
+                let currentActive = 'home';
+                sections.forEach(section => {
+                    const rect = section.getBoundingClientRect();
+                    // Check if section is mostly in viewport (top half or center)
+                    if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+                        currentActive = section.id;
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    const linkSection = link.getAttribute('data-section');
+                    const underline = link.querySelector('.underline-indicator');
+                    if (linkSection === currentActive) {
+                        link.classList.add('font-semibold', 'text-indigo-600', 'dark:text-indigo-400');
+                        if (underline) underline.classList.remove('hidden');
+                    } else {
+                        link.classList.remove('font-semibold', 'text-indigo-600', 'dark:text-indigo-400');
+                        if (underline) underline.classList.add('hidden');
+                    }
+                });
+            }
+
+            // --- Event Listeners ---
+            darkModeToggle.addEventListener('click', toggleDarkMode);
+            mobileDarkModeToggle.addEventListener('click', toggleDarkMode);
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.remove('hidden');
+                setTimeout(() => { // Small delay for transition
+                    mobileMenu.classList.add('translate-x-0');
+                    mobileMenu.classList.remove('translate-x-full');
+                }, 10);
+            });
+
+            closeMobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.remove('translate-x-0');
+                mobileMenu.classList.add('translate-x-full');
+                setTimeout(() => { // Small delay for transition
+                    mobileMenu.classList.add('hidden');
+                }, 300); // Match CSS transition duration
+            });
+
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    smoothScrollTo(this.getAttribute('data-section'));
+                });
+            });
+
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    smoothScrollTo(this.getAttribute('data-section'));
+                });
+            });
+
+            prevTestimonialButton.addEventListener('click', () => {
+                currentTestimonialIndex = (currentTestimonialIndex - 1 + developerData.testimonials.length) % developerData.testimonials.length;
+                renderTestimonial();
+                startTestimonialCarousel(); // Restart interval on manual change
+            });
+
+            nextTestimonialButton.addEventListener('click', () => {
+                currentTestimonialIndex = (currentTestimonialIndex + 1) % developerData.testimonials.length;
+                renderTestimonial();
+                startTestimonialCarousel(); // Restart interval on manual change
+            });
+
+            window.addEventListener('scroll', () => {
+                updateNavbarOnScroll();
+                updateActiveNavLink();
+            });
+
+            // Initial renders and setup
+            renderProjects();
+            renderTestimonial();
+            startTestimonialCarousel();
+            updateNavbarOnScroll(); // Set initial navbar state
+            updateActiveNavLink(); // Set initial active link
+            animateOnScroll(); // Trigger initial element animations
+        });
+    </script>
+</body>
+</html>
